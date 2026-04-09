@@ -1,0 +1,55 @@
+services:
+
+  # =========================
+  # 🔹 FASTAPI BACKEND
+  # =========================
+  - type: web
+    name: medrag-backend
+    runtime: python
+    plan: free
+    rootDir: backend
+
+    buildCommand: pip install -r ../requirements.txt
+    startCommand: uvicorn main:app --host 0.0.0.0 --port 10000
+
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.9
+
+      # 🔐 QDRANT
+      - key: QDRANT_URL
+        sync: false
+      - key: QDRANT_API_KEY
+        sync: false
+
+      # 🔐 LLM KEYS
+      - key: OPENROUTER_API_KEY
+        sync: false
+      - key: SERPER_API_KEY
+        sync: false
+      - key: HUGGINGFACEHUB_API_TOKEN
+        sync: false
+      - key: TOKEN_LLAMA
+        sync: false
+      - key: AI_PIPE_BASE
+        sync: false
+
+  # =========================
+  # 🔹 STREAMLIT FRONTEND
+  # =========================
+  - type: web
+    name: medrag-frontend
+    runtime: python
+    plan: free
+    rootDir: frontend
+
+    buildCommand: pip install -r ../requirements.txt
+    startCommand: streamlit run app.py --server.port 10000 --server.address 0.0.0.0
+
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.9
+
+      # 🔗 CONNECT TO BACKEND
+      - key: BACKEND_URL
+        value: https://medrag-backend.onrender.com

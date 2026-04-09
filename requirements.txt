@@ -1,0 +1,13 @@
+fastapi
+uvicorn[standard]
+pydantic
+streamlit
+requests
+pandas
+sentence-transformers
+qdrant-client
+crewai
+openai
+python-dotenv
+httpx
+litellm
