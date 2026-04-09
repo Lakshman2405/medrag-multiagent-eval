@@ -188,7 +188,7 @@ def render_dashboard(data, dynamic=False):
                 st.dataframe(matrix, use_container_width=True)
 
     # ================= CASE EXPLORER =================
-    elif panel == "Case Explorer":
+    elif sub_tab == "Case Explorer":
     
         st.title("🔍 Case Explorer")
     
