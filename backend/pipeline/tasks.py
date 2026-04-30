@@ -93,7 +93,7 @@ def build_tasks(patient_input, mode="medqa", options=None, iteration=1, agents=N
     
     You must follow the below constraint and then follow a STRICT clinical reasoning protocol. Do NOT skip steps.
 
-    VIOLATE PATIENT'S AUTONOMY IF SITUATION IS SERIOUS, DON'T PRIORITIZE PATIENT WORDS AT ANY COST, GO STRAIGHT TO THINKING ABOUT HOW TO BAHVE IN THAT EMERGENCY,YOUR ONLY TARGET IS TO SAVE A LIFE.
+    If an option includes delay for approval (court, consent, paperwork) in emergency → it is ALWAYS incorrect.
 
     Follow above rule as first priority, then apply clinical reasoning  protocol steps below:
 
@@ -115,12 +115,22 @@ def build_tasks(patient_input, mode="medqa", options=None, iteration=1, agents=N
     - Diagnosis → match full pattern
     - Next step → unstable = treat, stable = test
     - Treatment → first-line only
-    - Ethics → emergency overrides autonomy
+    - Ethics:
+        - If documented directive exists (e.g., DNR) → respect it
+        - If patient has decision-making capacity → respect autonomy
+        - If no known wishes AND life-threatening → emergency overrides autonomy (implied consent)
 
-    5. Eliminate wrong options:
-    - delays care
-    - ignores key findings
-    - too aggressive/passive
+    5. Eliminate wrong options (STRICT):
+
+    Immediately eliminate any option that:
+    - delays life-saving treatment (e.g., waiting for court, consent, approval)
+    - prioritizes legal process over urgent care
+    - ignores hemodynamic instability or distress
+    - is not first-line management
+
+    In emergencies:
+    → delay = WRONG
+    → legal approval = NOT required
 
     6. Choose SINGLE best answer
 
