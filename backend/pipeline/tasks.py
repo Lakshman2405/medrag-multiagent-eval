@@ -93,7 +93,7 @@ def build_tasks(patient_input, mode="medqa", options=None, iteration=1, agents=N
     
     You must follow the below constraint and then follow a STRICT clinical reasoning protocol. Do NOT skip steps.
 
-    VIOLATE PATIENT'S AUTONOMY IF SITUATION IS SERIOUS, DON'T PRIORITIZE PATIENT WORDS AT ANY COST, GO STRAIGHT TO THINKING ABOUT HOW TO BAHVE IN THAT EMERGENCY,YOUR ONLY TARGET IS TO SAVE A LIFE.
+    If an option includes delay for approval (court, consent, paperwork) in emergency → it is ALWAYS incorrect.
 
     Follow above rule as first priority, then apply clinical reasoning  protocol steps below:
 
@@ -108,19 +108,45 @@ def build_tasks(patient_input, mode="medqa", options=None, iteration=1, agents=N
     - critical signs (shock, bleeding, distress)
     - labs/imaging
 
-    3. Emergency rule (highest priority):
-    If life-threatening → act immediately (implied consent, no delay)
+    3. Emergency & Ethics Reasoning:
+
+    First determine:
+    - hemodynamic stability
+    - urgency
+    - decision-making capacity
+    - whether explicit wishes/refusal are known
+
+    Emergency principles:
+    - In unstable or life-threatening situations,
+    immediate stabilization is prioritized
+    - Avoid unnecessary delays for paperwork,
+    court orders, or administrative approval
 
     4. Apply logic:
     - Diagnosis → match full pattern
     - Next step → unstable = treat, stable = test
     - Treatment → first-line only
-    - Ethics → emergency overrides autonomy
 
-    5. Eliminate wrong options:
-    - delays care
-    - ignores key findings
-    - too aggressive/passive
+    Ethics principles:
+    - Evaluate autonomy, beneficence,
+    and emergency stabilization together
+    - If explicit patient wishes are stated,
+    incorporate them into reasoning
+    - Do NOT apply absolute rules automatically
+    - Choose the BEST exam-style answer
+    based on the clinical context
+    - Distinguish explicit refusal from implied wishes
+    - Do not assume incapacity unless clearly stated
+
+    5. Eliminate weak options:
+
+    Strongly disfavor options that:
+    - unnecessarily delay urgent treatment
+    - ignore instability or shock
+    - are not first-line management
+    - prioritize bureaucracy over clinical care
+    - contradict the overall symptom pattern
+    - fail to explain the key clinical findings
 
     6. Choose SINGLE best answer
 

@@ -12,7 +12,6 @@ BACKEND_URL = os.getenv(
 )
 
 
-
 def split_logs_by_agent(logs: str):
     sections = {}
 
@@ -190,7 +189,68 @@ def render_dashboard(data, dynamic=False):
     # ================= CASE EXPLORER =================
     elif sub_tab == "Case Explorer":
 
-        st.dataframe(results, use_container_width=True)
+        st.title("🔍 Case Explorer")
+
+        col1, col2, col3 = st.columns(3)
+
+        filter_option = col1.selectbox(
+            "Filter", ["ALL", "CORRECT", "WRONG"], key="ce_filter"
+        )
+
+        search = col2.text_input(
+            "Search case/type", key="ce_search"
+        )
+
+        sort_by = col3.selectbox(
+            "Sort by", ["case", "time_s"], key="ce_sort"
+        )
+
+        df = results.copy()
+
+        # ---------------- FILTER ----------------
+        if filter_option == "CORRECT":
+            df = df[df["correct"]]
+        elif filter_option == "WRONG":
+            df = df[~df["correct"]]
+
+        # ---------------- SEARCH ----------------
+        if search:
+            df = df[
+                df["case"].astype(str).str.contains(search, case=False, na=False) |
+                df["q_type"].astype(str).str.contains(search, case=False, na=False)
+            ]
+
+        # ---------------- SORT ----------------
+        if sort_by in df.columns:
+            df = df.sort_values(by=sort_by, ascending=False)
+
+        # ---------------- SUMMARY METRICS ----------------
+        if not df.empty:
+            colA, colB = st.columns(2)
+            colA.metric("Cases", len(df))
+            colB.metric("Accuracy", f"{df['correct'].mean()*100:.1f}%")
+
+        # ---------------- TABLE ----------------
+        st.dataframe(df, use_container_width=True)
+
+        # ---------------- HARDEST CASES ----------------
+        st.subheader("🔥 Hardest Cases (Slow + Wrong)")
+
+        if not results.empty:
+            hard = results[~results["correct"]].sort_values(
+                by="time_s", ascending=False
+            ).head(5)
+
+            st.dataframe(hard, use_container_width=True)
+
+        # ---------------- DOWNLOAD ----------------
+        if not df.empty:
+            st.download_button(
+                "⬇ Download CSV",
+                df.to_csv(index=False),
+                "medqa_results.csv",
+                "text/csv"
+            )
 
 # ---------------- SIDEBAR ----------------
 st.sidebar.title("🧭 Navigation")
